@@ -66,7 +66,6 @@ extern int8 mouseReport[];
 
 static void InitSystem(void);
 
-
 /*******************************************************************************
 * Function Name: main
 ********************************************************************************
@@ -130,7 +129,8 @@ int main()
 		if((CapSense_IsBusy() == 0) && (usbDataSentFlag == USB_HID_DATA_SENT))
 		{
 			/* Update baseline and check if any sensor is active */
-		    CapSense_UpdateAllBaselines();	
+//		    CapSense_UpdateAllBaselines();	// djjw
+            CapSense_ProcessAllWidgets();
 			isAnySensorActive = CapSense_IsAnyWidgetActive();	
 			
 			/* Initiate next scan of all the sensors */
