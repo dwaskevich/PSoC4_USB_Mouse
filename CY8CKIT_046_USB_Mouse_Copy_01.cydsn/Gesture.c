@@ -43,10 +43,10 @@
 #include "stdbool.h"
 #include "stdlib.h"
 
-#include "project.h"
-#include "stdio.h"
-
-char printBuffer[80];
+//#include "project.h"
+//#include "stdio.h"
+//
+//char printBuffer[80];
 
 /*******************************************************************************
 * 	Global Variable Declarations
@@ -173,8 +173,8 @@ tGestureId DetectGesture(uint8 isAnySensorActive)
 		/* Read the status of LEFT, RIGHT, UP, DOWN and CENTRE buttons  */
 //		buttonStatus = CapSense_sensorOnMask[0] & (LEFT_BTN_MASK | RIGHT_BTN_MASK | UP_BTN_MASK | DOWN_BTN_MASK | CENTRE_BTN_MASK); // djjw
         buttonStatus = CapSense_dsRam.wdgtStatus[0] & (LEFT_BTN_MASK | RIGHT_BTN_MASK | UP_BTN_MASK | DOWN_BTN_MASK | CENTRE_BTN_MASK); // djjw
-        sprintf(printBuffer, "dsRAM status 0x%0lx\t0x%0lx\r\n", CapSense_dsRam.wdgtStatus[0], buttonStatus);
-        UART_UartPutString(printBuffer);
+//        sprintf(printBuffer, "dsRAM status 0x%0lx\t0x%0lx\r\n", CapSense_dsRam.wdgtStatus[0], buttonStatus);
+//        UART_UartPutString(printBuffer);
 	}
 	
 	/* Read the slider status */

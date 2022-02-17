@@ -91,12 +91,34 @@ int main()
     CyGlobalIntEnable; /* Enable global interrupts. */
 	
 	#if(TUNER_ENABLE)
-		CapSense_TunerStart();	
-		
-		for(;;)
-		{
-			CapSense_TunerComm();
-		}
+    EZI2C_Start(); /* Start EZI2C Component */
+     /* 
+     * Set up communication and initialize data buffer to CapSense data structure
+     * to use Tuner application
+     */
+     EZI2C_EzI2CSetBuffer1(sizeof(CapSense_dsRam), sizeof(CapSense_dsRam), (uint8_t *)&(CapSense_dsRam));
+     CapSense_Start(); /* Initialize Component */
+     CapSense_ScanAllWidgets(); /* Scan all widgets */
+     for(;;)
+     {
+         /* Do this only when a scan is done */
+         if(CapSense_NOT_BUSY == CapSense_IsBusy())
+         {
+             CapSense_ProcessAllWidgets(); /* Process all widgets */
+             CapSense_RunTuner(); /* To sync with Tuner application */
+             if (CapSense_IsAnyWidgetActive()) /* Scan result verification */
+             {
+                 /* add custom tasks to execute when touch detected */
+             }         
+             CapSense_ScanAllWidgets(); /* Start next scan */
+         }
+     }
+//		CapSense_TunerStart();	
+//		
+//		for(;;)
+//		{
+//			CapSense_TunerComm();
+//		}
 	#endif /* #if(TUNER_ENABLE) */
 	
 	InitSystem();
