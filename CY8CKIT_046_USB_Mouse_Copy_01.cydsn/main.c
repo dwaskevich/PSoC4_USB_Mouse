@@ -87,6 +87,8 @@ int main()
 	uint32 isAnySensorActive, usbDeviceConfiguration = 0;
 	uint32 usbDataSentFlag = USB_HID_DATA_SENT;
 	bool usbDriverInstallationComplete = false;
+    
+    bool processCapSense = false;
 	
     CyGlobalIntEnable; /* Enable global interrupts. */
 	
@@ -146,9 +148,20 @@ int main()
 			USBFS_configuration = false;
 			usbDataSentFlag = USB_HID_DATA_SENT;
 		}
+        
+        if (USBFS_VBusPresent() != true || USBFS_GetConfiguration() == true )
+        {      
+//            CapTouchHandler( ); /* detect any touch button press/release */ 
+            processCapSense = true;
+        }
+        else
+        {
+            processCapSense = false;
+            CapSense_Stop(); 
+        }
 			
 		/* Wait until CapSense scan completes */
-		if((CapSense_IsBusy() == 0) && (usbDataSentFlag == USB_HID_DATA_SENT))
+		if((processCapSense == true) && (CapSense_IsBusy() == 0) && (usbDataSentFlag == USB_HID_DATA_SENT))
 		{
 			/* Update baseline and check if any sensor is active */
 //		    CapSense_UpdateAllBaselines();	// djjw
@@ -193,6 +206,12 @@ int main()
 				usbDriverInstallationComplete = false;				
 			}
 		}					
+        
+        if(usbDriverInstallationComplete == true && processCapSense == false)
+        {
+            CapSense_Start();
+        }
+            
 			
 		/* Process USB HID report only when the drivers are installed and device acks on desired endpoints */
 		if((usbDriverInstallationComplete == true) && (usbDataSentFlag != USB_HID_DATA_SENT))
